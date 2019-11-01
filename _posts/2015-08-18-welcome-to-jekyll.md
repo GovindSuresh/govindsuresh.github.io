@@ -2,7 +2,7 @@
 layout: post
 title:  "Welcome to my website!"
 date:   2019-11-01 16:03:19
-categories: [tutorial]
+categories: [announcement]
 comments: true
 ---
 
