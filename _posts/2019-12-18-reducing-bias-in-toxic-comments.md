@@ -10,22 +10,21 @@ image:
   creditlink: https://unsplash.com/photos/Ki0dpxd3LGc
 ---
 
-# Reducing bias in toxic comment classification
+As Machine Learning is increasingly used in our day to day lives, issues surrounding the reinforcement of existing biases against minority identities are increasingly important. In this project, I have explored this from the scope of online toxic comment classification. We have explored the short-comings of traditional machine learning models and NLP processes and have sought to train a better model which is better able to identify toxic comments while minimising bias against minority identites.  
 
-## Project Overview
-As Machine Learning is increasingly used in our day to day lives, issues surrounding the reinforcement of existing biases against minority identities are increasingly important. We are exploring this from the scope of online toxic comment classification and how we can train models which perform better in terms of bias while maintaining strong accuracy.
+This post provides an overview of my process and findings. You can find the code for this project on my [github](https://github.com/GovindSuresh/reducing-bias-in-toxicity-classification)
 
-This report provides an overview of our process and findings. Please explore the notebooks ```EDA.ipynb```,```preprocessing.ipynb```,```ML_models.ipynb```, and ```NN_model.ipynb``` for the code and further discussions on findings and process.
+### How do traditional ML models and NLP processes reinforce bias?
 
-### The short-comings of traditional ML models and NLP processes
+Ultimately, ML models learn from the data they are trained on, therefore the models will pick up on biases that already exist in the data due to societal norms. When looking at online comments we unfortunately see that a large number of toxic comments are directed at a variety of minority groups (e.g. Black, Muslim, LGBTQ). Thi
 
-Ultimately, ML models learn from the data they are trained on, therefore the models will pick up on biases that already exist in the data due to societal norms. When looking at online comments we unfortunately see that a large number of toxic comments are directed at a variety of minority groups (e.g. Black, Muslim, LGBTQ).
+Traditional ML classification models perform very well in terms of accuracy when identifying toxic comments. However due to the bias in the data described above, they have a tendency to view words that refer to a particular minority identity to be indicative of toxicity. This leads to a situation where even positive comments which happen to mention these identities being classified as toxic (false positives).
 
-Traditional ML classification models perform very well in terms of accuracy when identifying toxic comments. However due to the bias described above, they ds have a tendency to over-weight words that refer to a particular identity leading to non-toxic examples mentioning these identites being classified as toxic (False Positives). This issue is further exacerbated by standard NLP processing steps whereby sentences and words are stripped down to base representations and context is often lost 
+While having a strong overall accuracy is positive, this issue of false positives has the impact of excluding minority groups from talking about themselves in online communities and can therefore simply reinforce existing bias.
 
-While strong accuracy is a positive, models which are overly sensitive to minorities has the impact of excluding these groups from talking about themselves in online communities and can therefore simply reinforce existing bias. 
+This issue is further exacerbated by standard NLP processing steps. It is common to reduce the complexity of the text data being passed in by going through certain steps such as lemmatization, and the removal of stop-words. Usually, this isn't a major issue given that we keep the majority of the useful information in the text. However, when we consider complex topic matters such as toxic comments, contextual clues given by any part of a comment can be useful. In addition, these processes reduce sentences down to key words, which in toxic comment cases may just be repeated mentions of a minority identity.
 
-Below we have taken an example from our test dataset. This comment has been labelled as 'Non-Toxic' by the annotaters, but our logistic regression model has misclassified it as toxic. We can see from the image that the model has highlighted the words 'gay', 'lesbian', 'transgender' as key words indicating toxicity (shown in green below). This is the exact issue we have mentioned above and is what we are trying to solve.
+To help highlight this we have taken an example from our test dataset. This comment has been labelled as 'Non-Toxic' by the annotaters, but our logistic regression model has misclassified it as toxic. We can see from the image that the model has highlighted the words 'gay', 'lesbian', 'transgender' as key words indicating toxicity (shown in green below). This is the exact issue we have mentioned above and is what we are trying to solve.
 
 ![missclass](report_img/missclass-lgbt2.png "Misclassified LGBT comment")
 
