@@ -26,12 +26,14 @@ This issue is further exacerbated by standard NLP processing steps. It is common
 
 To help highlight this we have taken an example from our test dataset. This comment has been labelled as 'Non-Toxic' by the annotaters, but our logistic regression model has misclassified it as toxic. We can see from the image that the model has highlighted the words 'gay', 'lesbian', 'transgender' as key words indicating toxicity (shown in green below). This is the exact issue we have mentioned above and is what we are trying to solve.
 
-![missclass](report_img/missclass-lgbt2.png "Misclassified LGBT comment")
+![missclass](../img/missclass-lgbt2.png "Misclassified LGBT comment")
 
  **Original Text:** *'I think your hearts in the right place but gay men and lesbians have no issues using the correctly gendered bathrooms. Sexual orientation and gender identity are two totally different things. A transgender person can be gay, lesbian, bi, straight or any other Sexual orientation.'*
 
 ### Training a better model:
 Our aim is to train a neural network model, primarily an LSTM model, to classify toxic comments. RNN's such as LSTM are optimally suited to tackling this problem due to their ability to parse through sequences such as a comment. In other words, the LSTM can build contextual understanding of a word based on the words that have come before it (and even after it in the case of a bidirectional LSTM). This should give it an advantage over a traditional ML model such as Logistic Regression which have a tendency to look at how often individual words appear in toxic comments.  
+
+<DIAGRAM OF LSTM MODEL>
 
 ## Process:
 We will be training 4 different models in total, 3 standard ML models that follow a regular NLP pre-processing pipeline and 1 LSTM deep learning network.
@@ -143,7 +145,7 @@ These subgroups have been chosen due to there being more than 500 examples of ea
 
 ## Results:
 
-![results_table2](report_img/results_table.png "Results Table")
+![results_table2](../img/results_table.png "Results Table")
 
 From the results we can see that the LSTM model has outperformed the three traditional ML models that we have trained across all metrics tested. In particular, the result for the final bias metric was significantly better at 92%. This compares favorably to the next highest score of 71.3% and justifies our initial expectation that the LSTM model would perform better than the other models at minimising bias!
 
