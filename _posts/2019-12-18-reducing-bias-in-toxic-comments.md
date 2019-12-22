@@ -16,15 +16,15 @@ This post provides an overview of my process and findings. You can find the code
 
 ### How do traditional ML models and NLP processes reinforce bias?
 
-Ultimately, ML models learn from the data they are trained on, therefore the models will pick up on biases that already exist in the data due to societal norms. When looking at online comments we unfortunately see that a large number of toxic comments are directed at a variety of minority groups (e.g. Black, Muslim, LGBTQ). Thi
+Ultimately, ML models learn from the data they are trained on, therefore the models will pick up on biases that already exist in the data due to societal norms. When looking at online comments we unfortunately see that a large number of toxic comments are directed at a variety of minority groups (e.g. Black, Muslim, LGBTQ) and therefore may repeatedly contain mentions of these groups. 
 
 Traditional ML classification models perform very well in terms of accuracy when identifying toxic comments. However due to the bias in the data described above, they have a tendency to view words that refer to a particular minority identity to be indicative of toxicity. This leads to a situation where even positive comments which happen to mention these identities being classified as toxic (false positives).
 
 While having a strong overall accuracy is positive, this issue of false positives has the impact of excluding minority groups from talking about themselves in online communities and can therefore simply reinforce existing bias.
 
-This issue is further exacerbated by standard NLP processing steps. It is common to reduce the complexity of the text data being passed in by going through certain steps such as lemmatization, and the removal of stop-words. Usually, this isn't a major issue given that we keep the majority of the useful information in the text. However, when we consider complex topic matters such as toxic comments, contextual clues given by any part of a comment can be useful. In addition, these processes reduce sentences down to key words, which in toxic comment cases may just be repeated mentions of a minority identity.
+This is further exacerbated by standard NLP processing steps. It is common to reduce the complexity of the text data being passed in by going through certain steps such as lemmatization, and the removal of stop-words. Usually, this isn't a major issue given that we keep the majority of the useful information in the text. However, when we consider complex topic matters such as toxic comments, contextual clues given by any part of a comment can be useful. In addition, these processes reduce sentences down to key words, which in toxic comment cases may just be repeated mentions of a minority identity.
 
-To help highlight this we have taken an example from our test dataset. This comment has been labelled as 'Non-Toxic' by the annotaters, but our logistic regression model has misclassified it as toxic. We can see from the image that the model has highlighted the words 'gay', 'lesbian', 'transgender' as key words indicating toxicity (shown in green below). This is the exact issue we have mentioned above and is what we are trying to solve.
+To help highlight this we have taken an example from our test dataset. This comment has been labelled as 'Non-Toxic' by the labellers of our dataset, but our logistic regression model has misclassified it as toxic. We can see from the image that the model has highlighted the words 'gay', 'lesbian', 'transgender' as key words indicating toxicity (shown in green below). This is the exact problem we have mentioned above and is what we are trying to solve.
 
 ![missclass](/assets/images/missclass-lgbt2.png "Misclassified LGBT comment")
 
@@ -33,6 +33,18 @@ To help highlight this we have taken an example from our test dataset. This comm
 ### Training a better model:
 Our aim is to train a neural network model, primarily an LSTM model, to classify toxic comments. RNN's such as LSTM are optimally suited to tackling this problem due to their ability to parse through sequences such as a comment. In other words, the LSTM can build contextual understanding of a word based on the words that have come before it (and even after it in the case of a bidirectional LSTM). This should give it an advantage over a traditional ML model such as Logistic Regression which have a tendency to look at how often individual words appear in toxic comments.  
 
+![LSTM](/assets/images/LSTM_gif.gif "LSTM")
+
+The LSTM achieves this via a series of 'gates' that are themselves feed-forward neural networks. The gates learn which parts of a sentence to forget, which to pass on to the next cell, and which to output. By doing this, the model can focus on what is actually important in answering the question at hand and therefore handle longer sequences than a standard RNN. I highly recommend reading Chris Olah's excellent [blog on LSTM's](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) to learn more about how the model works in detail.
+
+
+### Dataset
+
+The dataset used comes from the Kaggle Compeition [Jigsaw Unintended bias in toxicity classification](https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification/overview/description)
+
+As a quick overview, the data contains online comments and a labelled target column indicating whether the comment is toxic. In addition to this, we are provided with identity labels, which show whether a particular comment had a specific mention to a certain identity.
+
+The identity labels are particularly important. We use these labels to subset the data into comments that specifically mention certain identity groups and then assess the performance of our models based on the metrics which we have described in more detail further below. Labelling was done via human annotators and scores were averaged to get a final label. As we discuss in our final conclusions at the end of this post, even the use of human annotations introduces another layer of bias that needs to be considered, but the use of multiple annotators helps reduce this somewhat.
 
 ## Process:
 We will be training 4 different models in total, 3 standard ML models that follow a regular NLP pre-processing pipeline and 1 LSTM deep learning network.
@@ -64,17 +76,7 @@ Another important factor regarding word embeddings is where they have been train
 
 The model architecture will be written in TensorFlow 2.0 code.
 
-## Dataset and Metrics:
-
-### Dataset
-
-The dataset used comes from the Kaggle Compeition [Jigsaw Unintended bias in toxicity classification](https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification/overview/description)
-
-As a quick overview, the data contains online comments and a labelled target column indicating whether the comment is toxic. In addition to this, we are provided with identity labels, which show whether a particular comment had a specific mention to a certain identity.
-
-The identity labels are particularly important. We use these labels to subset the data into comments that specifically mention certain identity groups and then assess the performance of our models based on the metrics which we have described in more detail further below.
-
-### Measuring Bias
+## How can we measure bias:
 
 As mentioned earlier, simply using accuracy is not enough for what we are trying to solve. As part of the Kaggle competition that the dataset is from, Jigsaw AI have provided a new metric that they have developed to assess how biased a model is against specified entities.
 
