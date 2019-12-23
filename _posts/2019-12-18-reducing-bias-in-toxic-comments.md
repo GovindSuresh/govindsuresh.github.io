@@ -2,7 +2,8 @@
 layout: post
 title: Reducing bias in toxic comment classification
 excerpt: "Capstone Project"
-categories: [projects]
+categories: [projects, NLP, Bias, LSTM ]
+mathjax: true
 comments: true
 image:
   feature: https://images.unsplash.com/photo-1440635592348-167b1b30296f?crop=entropy&dpr=2&fit=crop&fm=jpg&h=475&ixjsv=2.1.0&ixlib=rb-0.3.5&q=50&w=1250
@@ -46,43 +47,13 @@ As a quick overview, the data contains online comments and a labelled target col
 
 The identity labels are particularly important. We use these labels to subset the data into comments that specifically mention certain identity groups and then assess the performance of our models based on the metrics which we have described in more detail further below. Labelling was done via human annotators and scores were averaged to get a final label. As we discuss in our final conclusions at the end of this post, even the use of human annotations introduces another layer of bias that needs to be considered, but the use of multiple annotators helps reduce this somewhat.
 
-## Process:
-We will be training 4 different models in total, 3 standard ML models that follow a regular NLP pre-processing pipeline and 1 LSTM deep learning network.
-
-#### Traditional ML models
-This is primarily an NLP task, our X feature matrix will be based off the text from online comments. We have defined a pre-processing pipeline in the ```preprocessing.ipynb``` notebook to use for our our ML classifiers and a seperate pre-processing pipeline for the neural network models we are planning on training.
-
-From the classic ML classifer models, we intend to use the following models - our base word embedding technique will be TF-IDF: 
-
-   * Logistic Regression
-   * XGBoost
-   * Random Forest
-   
-We will carry out hyperparameter optimization for each model and calculate the metrics for each. The actual implentation of hyperparameter optimization will be restricted by our available computing power. Please see the ```ML_Models.ipynb``` for more details.
-
-#### LSTM
-*see ```NN_model.ipynb```*
-
-We will also train a neural network to answer this problem. We will start with a basic LSTM model which will be made of:
-    
-   * LSTM layers to read through the data
-   * Dense layers
-   * Output layer using sigmoid for the classes
-
-We will be using a Bidirectional LSTM layer in our model. The difference between this and a standard LSTM is that the model reads accross a given sequence both forwards and backwards and then combines the output of each pass through. The idea behind doing this is that the words which come after a given word also give useful context to a word, therefore we should build better understanding by reading through the sequence in each direction.
-
-In terms of word embeddings, we will be using the pre-trained [GloVE Common Crawl (840B tokens, 2.2M vocab, cased, 300d vectors](https://nlp.stanford.edu/projects/glove/) word embeddings. These have been trained on a common crawl of the web, covering 2.2m different words and containing 840B tokens. These word embeddings have 300 dimensions, which would suggest that each word should be unique enough to capture contextual differences. 
-Another important factor regarding word embeddings is where they have been trained on. One common source is to train word embeddings from Wikipedia. However we did not believe that this would be appropriate for our domain given the differences in how language is used on Wikipedia than in online comments. 
-
-The model architecture will be written in TensorFlow 2.0 code.
-
 ## How can we measure bias:
 
-As mentioned earlier, simply using accuracy is not enough for what we are trying to solve. As part of the Kaggle competition that the dataset is from, Jigsaw AI have provided a new metric that they have developed to assess how biased a model is against specified entities.
+So how can we actually quantify bias? A lot of research and thought has gone into this and often this depends on the type of bias we are trying to reduce. In this case, Jigsaw AI have provided a 'final bias metric' as part of the Kaggle competition that borrows heavily from a standard classification metric, the Reciever Operating Characteristic - Area Uunder Curve (AUC). We split the data into the subgroups mentioned earlier and calculate the AUC for each subgroup. These are then combined with the overall AUC to give a final score. Effectively we weight the standard ROC-AUC with performance against specific identity subgroups. A high overall AUC but much lower weighted AUC suggests the model is heavily biased.  
 
 #### Overall ROC-AUC:
 
-This is the standard ROC-AUC for the full evaluation set. In other words this is the area under the Reciever Operating Characteristic curve. It compares the true positive and false positive rates of a binary model.
+This is the standard ROC-AUC for the full evaluation set. 
 
 #### Subgroup ROC-AUC:
 
@@ -142,6 +113,36 @@ As with the actual Kaggle competition, we will be measuring the final bias metri
    * Psychiatric or Mental Illness
 
 These subgroups have been chosen due to there being more than 500 examples of each case mentioned in our test set. 
+
+## Process:
+We will be training 4 different models in total, 3 standard ML models that follow a regular NLP pre-processing pipeline and 1 LSTM deep learning network.
+
+#### Traditional ML models
+This is primarily an NLP task, our X feature matrix will be based off the text from online comments. We have defined a pre-processing pipeline in the ```preprocessing.ipynb``` notebook to use for our our ML classifiers and a seperate pre-processing pipeline for the neural network models we are planning on training.
+
+From the classic ML classifer models, we intend to use the following models - our base word embedding technique will be TF-IDF: 
+
+   * Logistic Regression
+   * XGBoost
+   * Random Forest
+   
+We will carry out hyperparameter optimization for each model and calculate the metrics for each. The actual implentation of hyperparameter optimization will be restricted by our available computing power. Please see the ```ML_Models.ipynb``` for more details.
+
+#### LSTM
+*see ```NN_model.ipynb```*
+
+We will also train a neural network to answer this problem. We will start with a basic LSTM model which will be made of:
+    
+   * LSTM layers to read through the data
+   * Dense layers
+   * Output layer using sigmoid for the classes
+
+We will be using a Bidirectional LSTM layer in our model. The difference between this and a standard LSTM is that the model reads accross a given sequence both forwards and backwards and then combines the output of each pass through. The idea behind doing this is that the words which come after a given word also give useful context to a word, therefore we should build better understanding by reading through the sequence in each direction.
+
+In terms of word embeddings, we will be using the pre-trained [GloVE Common Crawl (840B tokens, 2.2M vocab, cased, 300d vectors](https://nlp.stanford.edu/projects/glove/) word embeddings. These have been trained on a common crawl of the web, covering 2.2m different words and containing 840B tokens. These word embeddings have 300 dimensions, which would suggest that each word should be unique enough to capture contextual differences. 
+Another important factor regarding word embeddings is where they have been trained on. One common source is to train word embeddings from Wikipedia. However we did not believe that this would be appropriate for our domain given the differences in how language is used on Wikipedia than in online comments. 
+
+The model architecture will be written in TensorFlow 2.0 code.
 
 
 ## Results:
