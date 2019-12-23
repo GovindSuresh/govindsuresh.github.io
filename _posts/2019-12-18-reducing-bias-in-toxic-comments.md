@@ -41,68 +41,13 @@ The LSTM achieves this via a series of 'gates' that are themselves feed-forward 
 
 ### Dataset
 
-The dataset used comes from the Kaggle Compeition [Jigsaw Unintended bias in toxicity classification](https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification/overview/description)
+The dataset used comes from the Kaggle Compeition [Jigsaw Unintended bias in toxicity classification.](https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification/overview/description)
 
 As a quick overview, the data contains online comments and a labelled target column indicating whether the comment is toxic. In addition to this, we are provided with identity labels, which show whether a particular comment had a specific mention to a certain identity.
 
 The identity labels are particularly important. We use these labels to subset the data into comments that specifically mention certain identity groups and then assess the performance of our models based on the metrics which we have described in more detail further below. Labelling was done via human annotators and scores were averaged to get a final label. As we discuss in our final conclusions at the end of this post, even the use of human annotations introduces another layer of bias that needs to be considered, but the use of multiple annotators helps reduce this somewhat.
 
-## How can we measure bias:
-
-So how can we actually quantify bias? A lot of research and thought has gone into this and often this depends on the type of bias we are trying to reduce. In this case, Jigsaw AI have provided a 'final bias metric' as part of the Kaggle competition that borrows heavily from a standard classification metric, the Reciever Operating Characteristic - Area Uunder Curve (AUC). We split the data into the subgroups mentioned earlier and calculate the AUC for each subgroup. These are then combined with the overall AUC to give a final score. Effectively we weight the standard ROC-AUC with performance against specific identity subgroups. A high overall AUC but much lower weighted AUC suggests the model is heavily biased.  
-
-#### Overall ROC-AUC:
-
-This is the standard ROC-AUC for the full evaluation set. 
-
-#### Subgroup ROC-AUC:
-
-Here, we restrict the data set to only the examples that mention the specific identity subgroup. A low value in this metric means the model does a poor job of distinguishing between toxic and non-toxic comments that mention the identity. No different to the standard AUC, just for a particular subgroup.
-
-#### BPSN AUC:
-
-BPSN (Background Positive, Subgroup Negative) AUC: Here, we restrict the test set to the non-toxic examples that mention the identity and the toxic examples that do not. A low value in this metric means that the model confuses non-toxic examples that mention the identity with toxic examples that do not, likely meaning that the model predicts higher toxicity scores than it should for non-toxic examples mentioning the identity.
-
-#### BNSP AUC:
-
-BNSP (Background Negative, Subgroup Positive) AUC: Here, we restrict the test set to the toxic examples that mention the identity and the non-toxic examples that do not. A low value here means that the model confuses toxic examples that mention the identity with non-toxic examples that do not, likely meaning that the model predicts lower toxicity scores than it should for toxic examples mentioning the identity.
-
-
-#### Generalized Mean of Bias AUCs
-To combine the per-identity Bias AUCs into one overall measure, we calculate their generalized mean as defined below:
-
-$M_p(m_s) = \left(\frac{1}{N} \sum_{s=1}^{N} m_s^p\right)^\frac{1}{p}$
-
-Where:
-
-$M_p$ = the $p$th power-mean function
-
-$m_s$ = the bias metric $m$ calulated for subgroup $s$
-
-$N$ = number of identity subgroups
-
-For this competition, JigsawAI use a $p$ value of -5 to encourage competitors to improve the model for the identity subgroups with the lowest model performance.
-
-### Final Metric
-We combine the overall AUC with the generalized mean of the Bias AUCs to calculate the final model score:
-
-$score = w_0 AUC_{overall} + \sum_{a=1}^{A} w_a M_p(m_{s,a})$
-
-$A$ = number of submetrics (3)
-
-$m_{s,a}$ = bias metric for identity subgroup $s$ using submetric $a$
-
-$w_a$ = $a$ weighting for the relative importance of each submetric; all four $w$ values set to 0.25
-
-
-We will be comparing our models on the following:
-    * Accuracy Score
-    * F1 Score,
-    * Final Bias Metric
-
-By doing this we will be assessing our models ability to generally be correct at identifying toxic comments; how strong their precision and recall are; and their ability to do so without biasing against minority identities.
-
-As with the actual Kaggle competition, we will be measuring the final bias metric against the following subgroups:
+As with the Kaggle competition rules, we will be specifically focussing on the below subgroups. These subgroups have been chosen due to there being more than 500 examples of each case mentioned in our test set. 
 
    * Male
    * Female
@@ -112,8 +57,28 @@ As with the actual Kaggle competition, we will be measuring the final bias metri
    * Muslim
    * Psychiatric or Mental Illness
 
-These subgroups have been chosen due to there being more than 500 examples of each case mentioned in our test set. 
+## How can we measure bias:
 
+So how can we actually quantify bias? A lot of research and thought has gone into this and often this depends on the type of bias we are trying to reduce. In this case, Jigsaw AI have provided a 'final bias metric' as part of the Kaggle competition that borrows heavily from a standard classification metric, the Reciever Operating Characteristic - Area Uunder Curve (AUC). We split the data into the subgroups mentioned earlier and calculate the AUC for each subgroup. These are then combined with the overall AUC to give a final score. Effectively we weight the standard ROC-AUC with performance against specific identity subgroups. A high overall AUC but much lower weighted AUC suggests the model is heavily biased.  
+
+If you are interested you can find Jigsaw AI's explanation of the metric [here.](https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification/overview/evaluation) in addition to this, Jigsaw AI have written [this paper](https://arxiv.org/abs/1903.04561) which delves more deeply into the development of the metric we are using. 
+
+Ultimately, the final metric is calculated as follows: 
+
+$score = w_0 AUC_{overall} + \sum_{a=1}^{A} w_a M_p(m_{s,a})$
+
+$A$ = number of submetrics (3)
+
+$m_{s,a}$ = bias metric for identity subgroup $s$ using submetric $a$
+
+$w_a$ = $a$ weighting for the relative importance of each submetric; all four $w$ values set to 0.25
+
+We will be comparing our models on the following:
+   * Accuracy Score
+   * F1 Score,
+   * Final Bias Metric
+
+ 
 ## Process:
 We will be training 4 different models in total, 3 standard ML models that follow a regular NLP pre-processing pipeline and 1 LSTM deep learning network.
 
@@ -148,6 +113,14 @@ The model architecture will be written in TensorFlow 2.0 code.
 ## Results:
 
 ![results_table2](/assets/images/results_table.png "Results Table")
+
+| Model | Accuracy | F1 | Final Bias Metric |
+|:--------|:-------:|--------:|--------:|
+| Logistic   | 94.7%   | 59.9%   | 71.3%   |
+| XGBoost   | 94.4%   | 53.7%   | 66.6%   |
+| Random Forest   | 94.2%   | 47.9%   | 61.1%   |
+|=====
+| **LSTM**   | **95.3%**   | **68.1%**   | **92.0%**   |   
 
 From the results we can see that the LSTM model has outperformed the three traditional ML models that we have trained across all metrics tested. In particular, the result for the final bias metric was significantly better at 92%. This compares favorably to the next highest score of 71.3% and justifies our initial expectation that the LSTM model would perform better than the other models at minimising bias!
 
