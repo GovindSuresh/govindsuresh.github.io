@@ -71,7 +71,7 @@ $A$ = number of submetrics (3)
 
 $m_{s,a}$ = bias metric for identity subgroup $s$ using submetric $a$
 
-$w_a$ = $a$ weighting for the relative importance of each submetric; all four $w$ values set to 0.25
+$w_a$ = a weighting for the relative importance of each submetric; all four $w$ values set to 0.25
 
 We will be comparing our models on the following:
    * Accuracy Score
@@ -112,10 +112,8 @@ The model architecture will be written in TensorFlow 2.0 code.
 
 ## Results:
 
-![results_table2](/assets/images/results_table.png "Results Table")
-
 | Model | Accuracy | F1 | Final Bias Metric |
-|:--------|:-------:|--------:|--------:|
+|:--------|:-------:|:--------:|:--------:|
 | Logistic   | 94.7%   | 59.9%   | 71.3%   |
 | XGBoost   | 94.4%   | 53.7%   | 66.6%   |
 | Random Forest   | 94.2%   | 47.9%   | 61.1%   |
