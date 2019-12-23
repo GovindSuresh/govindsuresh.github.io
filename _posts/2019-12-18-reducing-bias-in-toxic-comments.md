@@ -80,18 +80,30 @@ We will be comparing our models on the following:
 
  
 ## Process:
-We will be training 4 different models in total, 3 standard ML models that follow a regular NLP pre-processing pipeline and 1 LSTM deep learning network.
+For this project our main aim is to train an LSTM model that is able to classify toxic comments. We will then compare this to a handful of traditional ML models where we have also applied standard NLP pre-processing methods to prepare the text data. If you are interested in looking at the code, I have mentioned the relevant notebook files for each part of the process. 
 
 #### Traditional ML models
-This is primarily an NLP task, our X feature matrix will be based off the text from online comments. We have defined a pre-processing pipeline in the ```preprocessing.ipynb``` notebook to use for our our ML classifiers and a seperate pre-processing pipeline for the neural network models we are planning on training.
-
-From the classic ML classifer models, we intend to use the following models - our base word embedding technique will be TF-IDF: 
+*see the ```ML_Models.ipynb```*
+For the baseline models to compare I tested out the 3 classifiers below. T
 
    * Logistic Regression
    * XGBoost
    * Random Forest
+
+ These were selected for a combination of speed and general performance at classification. In my view, logistic regression is always a great model to try out on a task given its ease of interpretability and generally strong performance. The other two models, XGBoost and random forest are both ensemble methods which generally also show very strong performance and speed. It was also our intention to try other models including SVM and Naieve Bayes, however we were limited by computing power and a relatively short timeframe. 
+
+Hyperparameter optimization has been carried out for each model and calculate the metrics for each. Given the final bias metric cannot be easily loaded into Scikit-Learn's cross validation functions, we used the standard ROC-AUC metric as a proxy to find the best set of hyperparameters and regularization strength for our models. 
+
+Text preprocessing can be found in the ```preprocessing.ipynb``` file. For our three models above we used the same NLP pipeline that covered the below:
    
-We will carry out hyperparameter optimization for each model and calculate the metrics for each. The actual implentation of hyperparameter optimization will be restricted by our available computing power. Please see the ```ML_Models.ipynb``` for more details.
+   * Cased to lower
+   * Expanded contractions
+   * Tokenization
+   * Removed punctuation
+   * Removed stop words
+   * Lemmatized words 
+
+As the dataset was made up of online comments I had to factor in the numerous cases of non-standard language, such as deliberate miss-spellings, slang, emojis, and so on. To do so I took advantage of pre-made tools such as [NLTK's tweet tokenizer](https://www.nltk.org/api/nltk.tokenize.html). In a perfect world, there would have been more time to parse through the processed text to correct any other edge-cases but the size of the dataset made this unrealistic.
 
 #### LSTM
 *see ```NN_model.ipynb```*
