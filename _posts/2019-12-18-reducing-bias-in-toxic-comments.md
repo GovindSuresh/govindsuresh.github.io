@@ -82,7 +82,7 @@ We will be comparing our models on the following:
 ## Process:
 For this project our main aim is to train an LSTM model that is able to classify toxic comments. We will then compare this to a handful of traditional ML models where we have also applied standard NLP pre-processing methods to prepare the text data. If you are interested in looking at the code, I have mentioned the relevant notebook files for each part of the process. 
 
-#### Traditional ML models
+### Traditional ML models
 *see the ```ML_Models.ipynb```*
 For the baseline models to compare I tested out the 3 classifiers below. T
 
@@ -105,22 +105,32 @@ Text preprocessing can be found in the ```preprocessing.ipynb``` file. For our t
 
 As the dataset was made up of online comments I had to factor in the numerous cases of non-standard language, such as deliberate miss-spellings, slang, emojis, and so on. To do so I took advantage of pre-made tools such as [NLTK's tweet tokenizer](https://www.nltk.org/api/nltk.tokenize.html). In a perfect world, there would have been more time to parse through the processed text to correct any other edge-cases but the size of the dataset made this unrealistic.
 
-#### LSTM
+### LSTM 
 *see ```NN_model.ipynb```*
 
-We will also train a neural network to answer this problem. We will start with a basic LSTM model which will be made of:
-    
-   * LSTM layers to read through the data
-   * Dense layers
-   * Output layer using sigmoid for the classes
-
-We will be using a Bidirectional LSTM layer in our model. The difference between this and a standard LSTM is that the model reads accross a given sequence both forwards and backwards and then combines the output of each pass through. The idea behind doing this is that the words which come after a given word also give useful context to a word, therefore we should build better understanding by reading through the sequence in each direction.
-
+#### Word Embeddings for Neural Networks 
 In terms of word embeddings, we will be using the pre-trained [GloVE Common Crawl (840B tokens, 2.2M vocab, cased, 300d vectors](https://nlp.stanford.edu/projects/glove/) word embeddings. These have been trained on a common crawl of the web, covering 2.2m different words and containing 840B tokens. These word embeddings have 300 dimensions, which would suggest that each word should be unique enough to capture contextual differences. 
-Another important factor regarding word embeddings is where they have been trained on. One common source is to train word embeddings from Wikipedia. However we did not believe that this would be appropriate for our domain given the differences in how language is used on Wikipedia than in online comments. 
 
-The model architecture will be written in TensorFlow 2.0 code.
+The selection of which word embeddings to use is particularly important as they will directly impact how the model understands each word. I selected the common crawl GloVE over the Wikipedia set as the latter uses language in a different way to how people talk on online comment platforms. Wikipedia is written in a formal style of English which is unlikely to translate well to a domain such as online comments. 
 
+#### Text preprocessing for Neural Networks 
+The process of getting text ready in this instance is quite different than what we did for the ML models earlier. Here our aim is more directed towards getting as many words in our vocabulary to match up with words in the embeddings file. So in this case we will avoid taking steps such as stop word removal and lemmatization. In addition, the word embedding file we have used includes vector representations for certain emojis, symbols and punctuation, which means that these characters need not be removed. I focussed my attention more on fixing missspellings/slang, incorrect use of punctuation such as apostrophes, and expanding contractions. 
+
+As a result, I was able to increase the vocabulary coverage percentage from 15.8% to 50.2% which was a very positive result! With more time I could look to increase this even further, but at this stage having over 50% coverage felt like it would be enough for now. 
+
+#### Model set-up
+
+The next stage is to train the keras tokenizer on our pre-processed corpus. This creates a large dictionary of words to unique indexes based on the number of occurances of that word. Once the trained tokenizer is ready we call the ```text_to_sequences``` method which will then convert our comments into word indexes to pass into the model. We also need to pad each sequence to a pre-set length so that they are all the same length when fed into the model.
+
+The final preperation stage is to create the embedding matrix. This will be a matrix of word embedding vectors, taken from our embeddings file, for all words where we can find a match in our vocabulary. This matrix will then be used as the weights in our embedding layer as discussed in the next stage. 
+
+#### Input layer and applying the word embeddings
+We will pass the text sequences into a input layer with a size determined by the maximum size we set for the sequenes. Controlling sequence length is a way for us to reduce the complexity of the model and how long it takes for us to train. The next layer is the embedding layer, where the text sequences are converted into the vector representations. To do this, we pass in the tokenized sequences which are then compared to a set of fixed weights given by the matrix of word embeddings created earlier. This layer is frozen so the weights do not change during the training process.
+
+#### LSTM Layers and final output
+For this model, I decided on using a single bidirectional LSTM layer, using tanh activation. The difference between this and a standard LSTM is that the model reads accross a given sequence both forwards and backwards and then combines the output of each pass through. The idea behind doing this is that the words which come after a given word also give useful context to a word, therefore we should build better understanding by reading through the sequence in each direction. LSTM layers can be stacked on eachother to try and parse out further information, however this adds to an already very long training process. 
+
+The data then goes through a Global Max Pooling layer before being passed through a 462 node dense layer using relu activation. The final layer is a 2 node output player which uses the sigmoid activation function to generate binary classes.  
 
 ## Results:
 
