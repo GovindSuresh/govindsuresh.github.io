@@ -112,7 +112,7 @@ As the dataset was made up of online comments I had to factor in the numerous ca
 ### LSTM 
 *see ```NN_model.ipynb```*
 
-![model](/assets/images/tf_summary.png "TensorFlow Model Summary")
+![model](/assets/images/tf_summary.png =500x500)
 
 #### Word Embeddings for Neural Networks 
 In terms of word embeddings, we will be using the pre-trained [GloVE Common Crawl (840B tokens, 2.2M vocab, cased, 300d vectors](https://nlp.stanford.edu/projects/glove/) word embeddings. These have been trained on a common crawl of the web, covering 2.2m different words and containing 840B tokens. These word embeddings have 300 dimensions, which would suggest that each word should be unique enough to capture contextual differences. 
