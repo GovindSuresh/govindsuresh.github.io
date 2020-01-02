@@ -11,7 +11,7 @@ As Machine Learning is increasingly used in our day to day lives, issues surroun
 
 This post provides an overview of my process and findings. You can find the code for this project on my [github.](https://github.com/GovindSuresh/reducing-bias-in-toxicity-classification)
 
-### How do traditional ML models and NLP processes reinforce bias?
+## How do traditional ML models and NLP processes reinforce bias?
 
 Ultimately, ML models learn from the data they are trained on, therefore the models will pick up on biases that already exist in the data due to societal norms. When looking at online comments, we unfortunately see that a large number of toxic comments are directed at a variety of minority groups (e.g. Black, Muslim, LGBTQ) and therefore may repeatedly contain mentions of these groups. 
 
@@ -27,22 +27,25 @@ To help highlight this we have taken an example from the test dataset used for t
 
  So why is this a problem? Firstly, we would be effectively excluding members of minority groups from being able to discuss themselves online and further marginalizing them. Secondly, the models would be suppressing any talk regarding these groups,therefore potentially suppressing useful discussion about societal issues. There are numerous other impacts created by biased models at a societal and individual level and this remains a key area of study in ML.
  
-### Training a better model:
+## Training a better model:
 
 In this project, I have looked into training a more complex neural network model to help alleviate the bias issue. The architecture I have chosen is the LSTM (Long Short Term Memory) model, which is a variant on RNNs. RNN's are optimally suited to tackling this problem due to their ability to parse through sequences such as a comment. In other words, the RNN can assess each word of a sequence based on what it knows from the previous words. The model can therefore build contextual understanding sentences based on what it knows about the words used in the sequence. This should give it an advantage over a traditional ML model such as Logistic Regression which have a tendency to look at how often individual words appear in toxic comments.  
 
-#### LSTM
+### LSTM
 
 As sequences get longer, RNNs in particular suffer from the [vanishing gradient problem](https://www.superdatascience.com/blogs/recurrent-neural-networks-rnn-the-vanishing-gradient-problem). If the sequence is too long, gradients further back in the sequence will become very small and hard to update. To solve this we use the LSTM model. 
 
 ![LSTM](/assets/images/LSTM_gif.gif "LSTM")
+
+{:.image-caption}
+*Inner workings of an LSTM cell. Credit: [Raimi Karim](https://towardsdatascience.com/animated-rnn-lstm-and-gru-ef124d06cf45)*
 
 
 The LSTM alleviates this by reducing the information the model needs to remember and also scaling up the importance of words which it learns to be important to solving the problem.
 
 This is achieved via a series of 'gates' that are themselves feed-forward neural networks. The gates apply various matrix algebra calculations followed by specific non-linear transformations to scale uneeded information to 0 and important information to higher values. By doing this, the model can focus on what is actually important in answering the question at hand and therefore handle longer sequences than a standard RNN. I highly recommend reading Chris Olah's excellent [blog on LSTM's](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) to learn more about how the model works in detail.
 
-### Dataset
+## Dataset
 
 The dataset used comes from the Kaggle Compeition [Jigsaw Unintended bias in toxicity classification.](https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification/overview/description)
 
@@ -123,7 +126,7 @@ The process of getting text ready in this instance is quite different than what 
 As a result, I was able to increase the vocabulary coverage percentage from 15.8% to 50.2% which was a very positive result! With more time I could look to increase this even further, but at this stage having over 50% coverage felt like it would be enough for now. 
 
 
-![model](/assets/images/tf_summary.png){:height="330px" width="650px"}
+![model](/assets/images/tf_summary.png){:height="330px" width="600px"}
 
 {:.image-caption}
 *Tensorflow model summary*
