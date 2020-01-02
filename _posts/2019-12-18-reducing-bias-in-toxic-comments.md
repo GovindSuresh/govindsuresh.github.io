@@ -86,7 +86,7 @@ We will be comparing our models on the following:
 For this project my main aim is to train an LSTM model that is able to classify toxic comments. I will also compare this to a handful of traditional ML models where we have also applied standard NLP pre-processing methods to prepare the text data. If you are interested in looking at the code, I've mentioned the relevant notebook files for each part of the process from the github repo. 
 
 ### Traditional ML models
-*see the ```ML_Models.ipynb```*
+*see ```ML_Models.ipynb```*
 
 For the baseline models to compare I tested out the 3 classifiers below. T
 
@@ -112,8 +112,6 @@ As the dataset was made up of online comments I had to factor in the numerous ca
 ### LSTM 
 *see ```NN_model.ipynb```*
 
-![model](/assets/images/tf_summary.png){:height="400px" width="650px"}
-
 #### Word Embeddings for Neural Networks 
 In terms of word embeddings, we will be using the pre-trained [GloVE Common Crawl (840B tokens, 2.2M vocab, cased, 300d vectors](https://nlp.stanford.edu/projects/glove/) word embeddings. These have been trained on a common crawl of the web, covering 2.2m different words and containing 840B tokens. These word embeddings have 300 dimensions, which would suggest that each word should be unique enough to capture contextual differences. 
 
@@ -123,6 +121,10 @@ The selection of which word embeddings to use is particularly important as they 
 The process of getting text ready in this instance is quite different than what we did for the ML models earlier. Here our aim is more directed towards getting as many words in our vocabulary to match up with words in the embeddings file. So in this case we will avoid taking steps such as stop word removal and lemmatization. In addition, the word embedding file we have used includes vector representations for certain emojis, symbols and punctuation, which means that these characters need not be removed. I focussed my attention more on fixing missspellings/slang, incorrect use of punctuation such as apostrophes, and expanding contractions. 
 
 As a result, I was able to increase the vocabulary coverage percentage from 15.8% to 50.2% which was a very positive result! With more time I could look to increase this even further, but at this stage having over 50% coverage felt like it would be enough for now. 
+
+![model](/assets/images/tf_summary.png){:height="320px" width="650px"}
+{:.image-caption}
+*Tensorflow model summary*
 
 #### Model set-up
 
