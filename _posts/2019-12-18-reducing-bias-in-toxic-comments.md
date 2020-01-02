@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Reducing bias in toxic comment classification
-excerpt: "Capstone Project"
+excerpt: "An outline of my results and findings from my project to build toxic comment classification model which is less biased against minority communities."
 categories: [projects, NLP, Bias, LSTM ]
 mathjax: true
 comments: true
@@ -38,7 +38,7 @@ As sequences get longer, RNNs in particular suffer from the [vanishing gradient 
 ![LSTM](/assets/images/LSTM_gif.gif "LSTM")
 
 {:.image-caption}
-*Inner workings of an LSTM cell. Credit: [Raimi Karim](https://towardsdatascience.com/animated-rnn-lstm-and-gru-ef124d06cf45)*
+*Inner workings of an LSTM cell - Credit: [Raimi Karim](https://towardsdatascience.com/animated-rnn-lstm-and-gru-ef124d06cf45)*
 
 
 The LSTM alleviates this by reducing the information the model needs to remember and also scaling up the importance of words which it learns to be important to solving the problem.
