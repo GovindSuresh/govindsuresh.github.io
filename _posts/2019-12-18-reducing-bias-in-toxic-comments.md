@@ -122,9 +122,9 @@ The process of getting text ready in this instance is quite different than what 
 
 As a result, I was able to increase the vocabulary coverage percentage from 15.8% to 50.2% which was a very positive result! With more time I could look to increase this even further, but at this stage having over 50% coverage felt like it would be enough for now. 
 
-![model](/assets/images/tf_summary.png){:height="330px" width="650px"}
-{:.image-caption}
-*Tensorflow model summary*
+
+
+{% include image.html file="/assets/images/tf_summary.png" description="This is an image." %}
 
 
 #### Model set-up
