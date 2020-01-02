@@ -128,7 +128,7 @@ As a result, I was able to increase the vocabulary coverage percentage from 15.8
 {:.image-caption}
 *Tensorflow model summary*
 
-{% include image.html file="/assets/images/tf_summary.png" description="My cat, Robert Downey Jr." %}{:height="330px" width="650px"}
+
 
 #### Model set-up
 
