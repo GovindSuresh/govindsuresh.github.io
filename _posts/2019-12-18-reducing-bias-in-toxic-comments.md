@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Reducing bias in toxic comment classification
-excerpt: "An outline of my results and findings from my project to build toxic comment classification model which is less biased against minority communities."
+excerpt: "An overview of my results and findings from my project to build toxic comment classification model which is less biased against minority communities."
 categories: [projects, NLP, Bias, LSTM ]
 mathjax: true
 comments: true
