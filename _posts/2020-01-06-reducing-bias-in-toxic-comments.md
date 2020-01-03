@@ -142,10 +142,11 @@ The next layer is then the embedding layer, where the text sequences are convert
 For this model, I decided on using a single bidirectional LSTM layer, using tanh activation. The difference between this and a standard LSTM is that the model reads accross a given sequence both forwards and backwards and then combines the output of each pass through. The idea behind doing this is that the words which come after a given word also give useful context to a word, therefore we should build better understanding by reading through the sequence in each direction. LSTM layers can be stacked on each other to try and parse out further information, however this adds to an already very long training process. 
 
 The data then goes through a global max pooling layer before being passed through a 462 node dense layer using ReLU activation. The final layer is a 2 node output layer which uses the sigmoid activation function to generate binary classes.    
+
 ![model](/assets/images/tf_summary.png){:height="330px" width="600px"}
 
 {:.image-caption}
-*Model strucure summary table*
+*Tensorflow model architecture*
 
 ## Results:
 
