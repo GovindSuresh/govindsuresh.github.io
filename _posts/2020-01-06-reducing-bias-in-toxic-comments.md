@@ -7,7 +7,7 @@ mathjax: true
 comments: true
 ---
 
-As machine learning is increasingly used in our day-to-day lives, issues surrounding the reinforcement of existing biases against minority identities are increasingly important. In this project, I have explored this from the scope of online toxic comment classification. I have looked into the shortcomings of traditional machine learning models and natural language processes and have sought to train a model which is better able to identify toxic comments while minimising bias against minority identities. 
+As machine learning is increasingly used in our day-to-day lives, issues surrounding the reinforcement of existing biases against minority identities are increasingly important. In this project, I have explored this from the scope of online toxic comment classification. I have looked into the shortcomings of traditional machine learning models and NLP workflows and have sought to train a model which is better able to identify toxic comments while minimising bias against minority identities. 
 
 This post provides an overview of my process and findings. You can find the code for this project on my [GitHub](https://github.com/GovindSuresh/reducing-bias-in-toxicity-classification).
 
@@ -17,7 +17,7 @@ Ultimately, ML models learn from the data they are trained on, therefore the mod
 
 Therefore traditional ML classification models, when combined with an encoding process such as TF-IDF, have a tendency to learn that the occurance of words such as 'gay' or 'black' suggests that a comment is more likely to be toxic, irrespective of wider context. As a result, we see large numbers of false positives when looking specifically at comments mentioning these identities.
 
-This is further exacerbated by standard NLP steps. It is common to reduce the complexity of the text data being passed in by going through certain steps such as lemmatization, and the removal of stop-words. Usually, this isn't a major issue given that we keep the majority of the useful information in the text. However, when we consider complex topic matters such as toxic comments, contextual clues given by any part of a comment can be useful. In addition, these processes reduce sentences down to key words, which in toxic comment cases may just be repeated mentions of a minority identity.
+This is further exacerbated by standard NLP workflows. It is common to reduce the complexity of the text data being passed in by going through certain steps such as lemmatization, and the removal of stop-words. Usually, this isn't a major issue given that we keep the majority of the useful information in the text. However, when we consider complex topic matters such as toxic comments, contextual clues given by any part of a comment can be useful.  These processes reduce sentences down to key words, which in toxic comment cases may just be repeated mentions of a minority identity.
 
 To help highlight this we have run a comment from the test dataset through the TextExplainer model from the ELI5 package. Simply put, the TextExplainer takes the results of a seperate model, in this case a logistic regression, and highlights the key words which indicate the class in question. In the case below, words highlighted in green are ones which the model sees as being toxic, red is for words which are viewed as non-toxic. More intense highlighting means the word is more/less toxic.
 
@@ -31,7 +31,7 @@ This particular comment was labelled as **non-toxic** originally, but the logist
  
 ## Training a better model
 
-In this project, I have looked into training a more complex neural network model to help alleviate the bias issue. The architecture I have chosen is the LSTM (Long Short Term Memory) model, which is a variant of recurrant neural networks (RNNs). RNN's are optimally suited to tackling this problem due to their ability to parse through sequences such as a comment. In other words, the RNN can assess each word of a sequence based on what it knows from the previous words. The model can therefore build contextual understanding sentences based on what it knows about the words used in the sequence. This should give it an advantage over a traditional ML model such as Logistic Regression which have a tendency to look at how often individual words appear in toxic comments.  
+In this project, I have looked into training a more complex neural network model to help alleviate the bias issue. The architecture I have chosen is the LSTM (Long Short Term Memory) model, which is a variant of recurrant neural networks (RNNs). RNN's are optimally suited to tackling this problem due to their ability to parse through sequences such as a comment. In other words, the RNN can assess each word of a sequence based on what it knows from the previous words. The model can therefore build contextual understanding of sentences based on what it knows about the words used in the sequence. This should give it an advantage over a traditional ML model such as Logistic Regression which have a tendency to look at how often individual words appear in toxic comments.  
 
 ### Long Short Term Memory Networks:
 
@@ -53,9 +53,9 @@ The dataset used comes from the Kaggle Compeition [Jigsaw Unintended bias in tox
 
 As a quick overview, the dataset contains approximately 1.8m online comments from a variety of sources. Each comment has been labelled indicating whether the comment is toxic or not. We are also provided with identity labels, which show whether a particular comment had a specific mention of a certain identity.
 
-The identity labels are particularly important. We use these labels to subset the data into comments that specifically mention certain identity groups and then assess the performance of our models based on the metrics which we have described in more detail further below. Labelling was done via human annotators and scores were averaged to get a final label. As we discuss in our final conclusions at the end of this post, even the use of human annotations introduces another layer of bias that needs to be considered, but the use of multiple annotators helps reduce this somewhat.
+The identity labels are particularly important. We use these labels to subset the data into comments that specifically mention certain identity groups and then assess the performance of our models based on the metrics which we have described in more detail further below. Labelling was done via human annotators and scores were averaged to get a final label. The intention behind averaging the results of multiple annotators was to reduce the impact of the individual biases of each annotator. 
 
-As with the Kaggle competition rules, we will be specifically focussing on the below subgroups. These subgroups have been chosen due to there being more than 500 examples of each case mentioned in our test set:
+As with the Kaggle competition rules, we will be specifically focussing on the subgroups below. These subgroups have been chosen due to there being more than 500 examples of each case mentioned in our test set:
 
    * Male
    * Female
@@ -67,7 +67,7 @@ As with the Kaggle competition rules, we will be specifically focussing on the b
 
 ## How can we measure bias?
 
-A lot of research and thought has gone into this and often this depends on the type of bias we are trying to reduce. In this case, Jigsaw AI have provided a 'final bias metric' as part of the Kaggle competition that borrows heavily from a standard classification metric, the Reciever Operating Characteristic - Area Under Curve (ROC-AUC). We split the data into the subgroups mentioned earlier and calculate the AUC for each subgroup. These are then combined with the overall AUC to give a final score. Effectively we weight the standard ROC-AUC with performance against specific identity subgroups. A high overall AUC but much lower weighted AUC suggests the model is heavily biased despite strong overall performance at classification.
+A lot of research and thought has gone into the issue of bias in ML and often this depends on the type of bias we are trying to reduce. In this case, Jigsaw AI have provided a 'final bias metric' as part of the Kaggle competition that borrows heavily from a standard classification metric, the Reciever Operating Characteristic - Area Under Curve (ROC-AUC). We split the data into the subgroups mentioned earlier and calculate the AUC for each subgroup. These are then combined with the overall AUC to give a final score. Effectively we weight the standard ROC-AUC with performance against specific identity subgroups. A high overall AUC but much lower weighted AUC suggests the model is heavily biased despite strong overall performance at classification.
 
 If you are interested you can find Jigsaw AI's explanation of the metric [here](https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification/overview/evaluation). In addition to this, Jigsaw AI have written [this paper](https://arxiv.org/abs/1903.04561) which delves more deeply into the development of the metric we are using.
 
@@ -92,13 +92,13 @@ For this project my main aim is to train an LSTM model that is able to classify 
 ### Traditional ML models
 *see ```ML_Models.ipynb```*
 
-For the baseline models to compare I tested out the 3 classifiers below. T
+For the baseline models to compare I tested out the 3 classifiers below. 
 
    * Logistic regression
    * XGBoost
    * Random forest
 
-These were selected for a combination of speed and general performance at classification. In my view, logistic regression is always a great model to try out on a task given its ease of interpretability and generally strong performance. The other two models, XGBoost and random forest are both ensemble methods which generally also show very strong performance and speed. It was also our intention to try other models including SVM and naive Bayes, however we were limited by computing power and a relatively short timeframe. I carried out hyperparamater optimization and cross-validation for each model. The nature of the final bias metric meant that it could not be easily loaded into Scikit-Learn's cross validation functions. Instead, I used the standard ROC-AUC metric as a proxy to find the best set of hyperparameters and regularization strength for our models. 
+These were selected for a combination of speed and general performance at classification. In my view, logistic regression is always a great model to try out on a task given its ease of interpretability and generally strong performance. The other two models, XGBoost and random forest are both ensemble methods which generally show very strong performance and speed. It was also our intention to try other models including SVM and naive Bayes, however we were limited by computing power and a relatively short timeframe to complete the project. I carried out hyperparamater optimization and cross-validation for each model. However, the nature of the final bias metric meant that it could not be easily loaded into Scikit-Learn's cross validation functions. Instead, I used the standard ROC-AUC metric as a proxy to find the best set of hyperparameters and regularization strength for our models. 
 
 Text preprocessing can be found in the ```preprocessing.ipynb``` file. For our three models above we used the same NLP pipeline that covered the below:
    
@@ -128,18 +128,18 @@ Initially, only 15.8% of the vocabulary from the dataset matched with a word fro
 
 The next stage in the process was taking our text sequences and getting them in a format where we could match them with the relevant embeddings as they passed into the model. 
 
-Firstly I trained the Keras tokenizer object on the pre-proccessed corpus. This created a large dictionary which matched words to unique indexes based on the number of occurances of that word in the corpus. I then was able to use the trained tokenizer to convert the comments into sequences of word indexes to pass into the model. After this, each sequence was padded to be the same length.
+Firstly I trained the Keras tokenizer object on the pre-proccessed corpus. This creates a large dictionary which matched words to unique indexes based on the number of occurances of that word in the corpus. I then was able to use the trained tokenizer to convert the comments into sequences of word indexes to pass into the model. After this, each sequence was padded to be the same length.
 
-The final preperation stage was to create the embedding matrix. This is a matrix of word embedding vectors, taken from our embeddings file, for all words where we can find a match in our vocabulary. This matrix is used as the weights in the embedding layer as discussed in the next stage. 
+The final preperation stage was to create the embedding matrix. This is simply a matrix of word embedding vectors where we are able to find a match between the words from our tokenizer with a word in the embeddings file. This matrix is used as the weights in the embedding layer as discussed in the next stage. 
 
 
 #### Input layer and applying the word embeddings
 The data is then passed into the input layer. The shape of the input layer is determined by the length that I padded the sequences to. Controlling this length is one way to control the model complexity, where shorter sequences are faster to train at the cost of lost information. 
 
-The next layer is then the embedding layer, where the text sequences are converted into the vector representations. To do this, when I defined the embedding layer, I passed in the word embedding matrix created earlier as the weights for this layer and then set this to be frozen so the numbers did not change during the training process.
+The next layer is then the embedding layer, where the text sequences are converted into their vector representations. To do this, when I defined the embedding layer, I passed in the word embedding matrix created earlier as the weights for this layer and then set this to be frozen so the numbers did not change during the training process.
 
 #### LSTM Layers and final output
-For this model, I decided on using a single bidirectional LSTM layer, using tanh activation. The difference between this and a standard LSTM is that the model reads accross a given sequence both forwards and backwards and then combines the output of each pass through. The idea behind doing this is that the words which come after a given word also give useful context to a word, therefore we should build better understanding by reading through the sequence in each direction. LSTM layers can be stacked on each other to try and parse out further information, however this adds to an already very long training process. 
+For this model, I decided on using a single bidirectional LSTM layer, using tanh activation. The difference between this and a standard LSTM is that the model reads accross a given sequence both forwards and backwards and then combines the output of each pass through. The idea behind doing this is that the words which come after a given word also give useful information about the context of the word in question, therefore we should build better understanding by reading through the sequence in each direction. LSTM layers can be stacked on each other to try and parse out further information, however this adds to an already very long training process. 
 
 The data then goes through a global max pooling layer before being passed through a 462 node dense layer using ReLU activation. The final layer is a 2 node output layer which uses the sigmoid activation function to generate binary classes.    
 
@@ -170,13 +170,11 @@ Overall, I consider the results to be a positive indication of our ability to re
  
    1. Addressing class imbalance. I believe a driver of the lower than expected recall levels for the models we trained is the large class imbalance present. In the future we would like to re-run the models after using a combination of different techniques to address this imbalance such as up-sampling, down-sampling, and SMOTE.  
    
-   2. The impact of different word embeddings. How text data is converted into numerical data is a key factor in any model. For our LSTM, we used word embeddings trained from a common crawl of the internet. What would be the impact of using word embeddings which had been trained on online comments specifically? A different route would be to see the impact of using a different methodology to develop the word embeddings. In many SotA solutions to NLP tasks, researchers have begun using transformer models such as BERT to generate the word embeddings. 
+   2. The impact of different word embeddings. How text data is converted into numerical representations is a key factor in any NLP model. For our LSTM, we used word embeddings trained from a common crawl of the internet. What would be the impact of using word embeddings which had been trained on online comments specifically? A different route would be to see the impact of using a different methodology to develop the word embeddings. In many SotA solutions to NLP tasks, researchers have begun using transformer models such as BERT to generate the word embeddings. 
    
-   3. Leading on from this - can we achieve superior results in our traditional ML models using more complex word embeddings?
+   3. Can we improve the models further by carrying out more exhaustive hyperparameter optimziation? I was significantly limited by available computing power, which meant that I had to comprimise on my hyperparameter optimization.
    
-   4. Can we improve the models further by carrying out more exhaustive hyperparameter optimziation? I was significantly limited by available computing power, which meant that I had to comprimise on my hyperparameter optimization.
-   
-   5. Different neural network architectures. We would like to see the impact of adding different layers to our model architecture such as an additional bidirectional LSTM layer. Outside of LSTMs, can we achieve similar results using CNN models which are generally much faster at training and inference? Transformer models would be a further area of research.
+   4. Different neural network architectures. We would like to see the impact of adding different layers to our model architecture such as an additional bidirectional LSTM layer. Outside of LSTMs, can we achieve similar results using CNN models which are generally much faster at training and inference? Transformer models would be a further area of research.
    
 
 ## Conclusions
