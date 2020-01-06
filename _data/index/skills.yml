@@ -2,5 +2,5 @@
 
 label: Ability
 id : cs
-aspects: Python, SQL, Machine Learning, Deep Learning, Spark, Docker
+aspects: Python, SQL, ML, Deep Learning, Spark, Docker
 percentage: 85, 85, 80, 60, 50, 55
