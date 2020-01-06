@@ -1,8 +1,9 @@
-- name: Massachusets Instutite of Technology
-  link: http://web.mit.edu/
-  date: 2011 - <i class="fa fa-clock-o" aria-hidden="true" title="Until Now"></i>
-  descr: <br> (expected graduation in 2019)
+- name: BrainStation
+  link: https://brainstation.io/
+  date: 2019 - 2019
+  descr: Data Science Diploma 
 
-- name: Harvard
-  link: http://www.harvard.edu/
-  date: 2007 - 2011
+- name: University of Birmingham, UK
+  link: https://www.birmingham.ac.uk/index.aspx
+  date: 2011 - 2015
+  descr: Mathematical Economics and Statistics With Year in Comp Sci BSc(hons)
