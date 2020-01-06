@@ -1,5 +1,5 @@
 - name: Reducing bias in toxic comment classification
-  descr: "Using a dataset of ~1.8m online comments, I have investigated how traditional ML models and NLP workflows can reinforce existing biases against minority groups. 
+  descr: "Using a dataset of ~1.8m online comments, I've investigated how traditional ML models and NLP workflows can reinforce existing biases against minority groups. 
   In addition, I created a more sophisticated LSTM neural network model which achieves superior and less biased performance than the traditional ML models.
-  image: pong.png"
+  "
   github: https://github.com/GovindSuresh/reducing-bias-in-toxicity-classification
