@@ -1,4 +1,5 @@
-- name: leonids
-  descr: "Bacon ipsum dolor sit amet doner meatball jowl short ribs, chicken prosciutto salami frankfurter. Pig drumstick turducken short ribs, brisket meatloaf ham hock shankle andouille corned beef strip steak. Venison ham bresaola strip steak. Pork belly ribeye prosciutto t-bone."
-  image: pong.png
-  github: https://github.com/renyuanz/leonids
+- name: Reducing bias in toxic comment classification
+  descr: "Using a dataset of ~1.8m online comments, I have investigated how traditional ML models and NLP workflows can reinforce existing biases against minority groups. 
+  In addition, I created a more sophisticated LSTM neural network model which achieves superior and less biased performance than the traditional ML models.
+  image: pong.png"
+  github: https://github.com/GovindSuresh/reducing-bias-in-toxicity-classification
