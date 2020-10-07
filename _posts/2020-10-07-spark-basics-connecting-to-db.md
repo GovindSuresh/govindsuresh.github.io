@@ -7,7 +7,7 @@ mathjax: true
 comments: true
 ---
 
-Ingesting and writing to databases is one of the most common workflows when working with big data tools such as Spark. In this post, we will go through the practical steps to connecting to databases using PySpark via the Spark SQL module. We will be focussing on the basics here of connecting in a local Spark environment.
+Ingesting and writing to databases is one of the most common workflows when working with big data tools such as Spark. In this post, we will go through the practical steps to connecting to databases using PySpark via the Spark SQL module. We will be using a local development environment for Spark rather than a cluster deployment. 
 
 ## How does Spark connect to databases?
 
@@ -19,13 +19,13 @@ The process to connecting to various databases is pretty much the same across th
 
 ## Connecting to MySQL
 
-Let's dive right in and go through how to connect to the MySQL database. I assume you already have a working installation of MySQL. I will be using the [Sakila]([https://dev.mysql.com/doc/sakila/en/](https://dev.mysql.com/doc/sakila/en/)) database in my examples. Though you can use any database you have access to. 
+Let's dive right in and go through how to connect to the MySQL database. I assume you already have a working installation of MySQL. I will be using the [Sakila](https://dev.mysql.com/doc/sakila/en/) database in my examples. Though you can use any database you have access to. 
 
 In the script, we will read in from the 'actor' and 'film_actor' table within the Sakila database, perform some aggregation and join operations between the two and finally write the output to a new table in the Sakila database. We will breakdown the code that is relevant to reading and writing to the database. 
 
 ### Step 1: Download the MySQL JDBC connector
 
-The first thing we need to do is to download the JDBC connector for MySQL. You can do this (here)[[https://dev.mysql.com/downloads/connector/j/](https://dev.mysql.com/downloads/connector/j/)]. Make sure the connector version you download is the one for your operating system. The particular file we are interested in from the downloaded archive is the actual `.jar` file. It will look something like this `mysql-connector-java-8.0.21.jar`.
+The first thing we need to do is to download the JDBC connector for MySQL. You can do this [here](https://dev.mysql.com/downloads/connector/j/). Make sure the connector version you download is the one for your operating system. The particular file we are interested in from the downloaded archive is the actual `.jar` file. It will look something like this `mysql-connector-java-8.0.21.jar`.
 
 Technically you can leave the .jar file anywhere. However, I recommend storing all these files in the same location as we will need to specify the path to the driver file whenever we submit a Spark job that needs to connect to the database. You can store them with the other jar files in your Spark installation.
 
