@@ -78,8 +78,7 @@ Either way is acceptable, the first way is perhaps easier when reading in the de
 The final stage here is to read in from the database, we will be reading the table into a Spark dataframe object. We pass in the options as arguments into the `.options()` method. As with anything in Spark, there are multiple ways to do this, we could have  passed these in separate `.options()` methods:
 
 ```python
-actors = spark.read.format("jdbc") \
-            .option("url", "jdbc:mysql://localhost:3306/sakila") \
+actors = spark.read.format("jdbc").option("url", "jdbc:mysql://localhost:3306/sakila") \
             .option("dbtable", "actor").option("user", "root") \
             .option("password", "pw") \
             .option("useSSL", "false") \
