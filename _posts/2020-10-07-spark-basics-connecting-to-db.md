@@ -79,13 +79,13 @@ The final stage here is to read in from the database, we will be reading the tab
 
 ```python
 actors = spark.read.format("jdbc") \
-		.option("url", "jdbc:mysql://localhost:3306/sakila") \
-        .option("dbtable", "actor") \
-		.option("user", "root") \
-		.option("password", "pw") \
-		.option("useSSL", "false") \
-		.option("serverTimezone", "EST") \
-		.load()
+		    .option("url", "jdbc:mysql://localhost:3306/sakila") \
+            .option("dbtable", "actor") \
+		    .option("user", "root") \
+		    .option("password", "pw") \
+		    .option("useSSL", "false") \
+		    .option("serverTimezone", "EST") \
+		    .load()
 ```
 
 ### Step 3: Carry out your operations
@@ -151,7 +151,7 @@ Spark uses what's known as a dialect to communicate with the RDBMS. I like to th
 
 If you want to be connect with other databases, you will need to define your own custom dialect which is a topic we may cover in a later post. 
 
-### Next Steps
+## Next Steps
 
 Congrats! You have successfully read and written to an RDBMS. The process for other popular database software such as Postgres is very similar. You just need to make sure you have the Postgres JDBC driver downloaded. A few options here and there will be different but the base principles are the same. 
 
