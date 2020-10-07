@@ -15,7 +15,7 @@ Spark connects to databases via JDBC (Java Database Connectivity). This is a Jav
 
 These drivers are just `.jar` files that contain the Java code to manage the connection between Spark and the database.   
 
-The process to connecting to various databases is pretty much the same across the board, you just need to have the relevant JBDC driver for the RDBMS you are trying to work with. 
+The process to connecting to various databases is pretty much the same across the board, you just need to have the relevant JDBC driver for the RDBMS you are trying to work with. 
 
 ## Connecting to MySQL
 
@@ -43,7 +43,7 @@ spark = SparkSession.builder.appName('read_from_mysql').master('local[*]').getOr
 user = '<your MySQL username>'
 pw = '<your MySQL pw>'
 use_ssl = 'false' # Needed due to MySql default security
-mysql_url = 'jdbc:mysql://localhost:3306/sakila?serverTimezone=EST' #This is the JBDC URI
+mysql_url = 'jdbc:mysql://localhost:3306/sakila?serverTimezone=EST' #This is the JDBC URI
 
 dbschema = 'sakila'
 
@@ -65,7 +65,7 @@ film_actors = spark.read.format('jdbc') \
 
 Let's break down the base options that we need to set. Some of these are pretty self-explanatory. You will need to pass in your MySQL username and password. It's important that this account has the relevant permissions to read/write/update the database in question. Remember not to hardcode your login details into the file, especially if storing this on a version control system. 
 
-The next key argument is the URI to connect to the database. The first part URI follows a pretty standard format, for example, the URI for Postgres would start `jbdc:postgresql://`. The next part of the URI is the address of the database. In this case, I'm connecting to a local server. The next part is the database/schema name. 
+The next key argument is the URI to connect to the database. The first part URI follows a pretty standard format, for example, the URI for Postgres would start `jdbc:postgresql://`. The next part of the URI is the address of the database. In this case, I'm connecting to a local server. The next part is the database/schema name. 
 
 For MySQL, you may also need to pass in an additional part at the end specifying the server timezone. This takes us to an additional point, you can actually pass most of the options we are setting via the URI itself rather than specifying them as separate options. For example:
 
@@ -80,7 +80,7 @@ The final stage here is to read in from the database, we will be reading the tab
 ```python
 actors = spark.read.format("jdbc") \
 		.option("url", "jdbc:mysql://localhost:3306/sakila") \
-	    .option("dbtable", "actor") \
+        .option("dbtable", "actor") \
 		.option("user", "root") \
 		.option("password", "pw") \
 		.option("useSSL", "false") \
@@ -104,7 +104,7 @@ new_table = film_actors.join(actors, on='actor_id', how='inner').select(film_act
 
 ### Step 4: Write back to the database
 
-To write back to the database we will take advantage of the Spark JBDC writer using `.write.jbdc()`.  In our example, we will create a new table in the Sakila database named 'film_counts'. 
+To write back to the database we will take advantage of the Spark JDBC writer.  In our example, we will create a new table in the Sakila database named 'film_counts'. 
 
 ```python
 # Properties to connect to the database, the JDBC driver is part of our pom.xml
@@ -114,7 +114,7 @@ prop = {"user": user, "password": pw}
 new_table.write.jdbc(mode='overwrite', url=mysql_url, table="film_counts", properties=prop)
 ```
 
-In the code snippet above, you can see we pass in some properties related to the user account as a dictionary. We then specify the URL to the MySQL server and also specify the table to write to in the `.write.jbdc()` method itself. 
+In the code snippet above, you can see we pass in some properties related to the user account as a dictionary. We then specify the URL to the MySQL server and also specify the table to write to in the `.write.jdbc()` method itself. 
 
 The most important option here is the `mode`. This governs how the JDBC writer object behaves when modifying the database. Currently, these 4 modes are supported:
 
