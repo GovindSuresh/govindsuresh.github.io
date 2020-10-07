@@ -7,7 +7,7 @@ title: Govind Suresh
 email: govind.suresh1@gmail.com
 description: Data science / Finance / Tech.
 url: # the base hostname & protocol for your site
-keywords: ["blog", "jekyll"]
+keywords: ["blog"]
 
 #
 ###################################
@@ -38,8 +38,8 @@ owner:
   job: Data Scientist
   bio: A site for my personal portfolio and general thoughts.
   email: govind.suresh1@gmail.com
-  disqus-shortname:
-  twitter: #username
+  disqus-shortname: govindsuresh
+  twitter: GovindSuresh
   facebook: #username
   google:
     plus: #username
