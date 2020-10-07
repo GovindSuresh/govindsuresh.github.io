@@ -79,13 +79,11 @@ The final stage here is to read in from the database, we will be reading the tab
 
 ```python
 actors = spark.read.format("jdbc") \
-		    .option("url", "jdbc:mysql://localhost:3306/sakila") \
-            .option("dbtable", "actor") \
-		    .option("user", "root") \
-		    .option("password", "pw") \
-		    .option("useSSL", "false") \
-		    .option("serverTimezone", "EST") \
-		    .load()
+            .option("url", "jdbc:mysql://localhost:3306/sakila") \
+            .option("dbtable", "actor").option("user", "root") \
+            .option("password", "pw") \
+            .option("useSSL", "false") \
+            .option("serverTimezone", "EST").load()
 ```
 
 ### Step 3: Carry out your operations
