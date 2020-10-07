@@ -79,13 +79,13 @@ The final stage here is to read in from the database, we will be reading the tab
 
 ```python
 actors = spark.read.format("jdbc") \
-							.option("url", "jdbc:mysql://localhost:3306/sakila") \
-							.option("dbtable", "actor") \
-							.option("user", "root") \
-							.option("password", "pw") \
-							.option("useSSL", "false") \
-							.option("serverTimezone", "EST") \
-							.load()
+						.option("url", "jdbc:mysql://localhost:3306/sakila") \
+						.option("dbtable", "actor") \
+						.option("user", "root") \
+						.option("password", "pw") \
+						.option("useSSL", "false") \
+						.option("serverTimezone", "EST") \
+						.load()
 ```
 
 ### Step 3: Carry out your operations
@@ -108,8 +108,7 @@ To write back to the database we will take advantage of the Spark JBDC writer us
 
 ```python
 # Properties to connect to the database, the JDBC driver is part of our pom.xml
-prop = {"user": user, 
-				"password": pw}
+prop = {"user": user, "password": pw}
 
 # Write in a table called ch02
 new_table.write.jdbc(mode='overwrite', url=mysql_url, table="film_counts", properties=prop)
@@ -138,7 +137,7 @@ The important thing to note here is that we need to pass in the location of our 
 
 If the script has appeared to execute fully, go ahead and check the new table has been added to the Sakila database.
 
-### A quick note on dialects:
+### A quick note on dialects
 
 Spark uses what's known as a dialect to communicate with the RDBMS. I like to think of this as a translation table that allows the Spark JDBC writer to translate how the database handles things like data types to Spark data types. These dialects are therefore unique to each RDBMS. As of Spark 3.0.0, the following dialects are supported:
 
