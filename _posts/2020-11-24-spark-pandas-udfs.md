@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Pandas UDFs in PySpark 3
-excerpt: "Implementing Pandas UDFs in Pyspark 3"
+excerpt: "Implementing and understanding Pandas UDFs in PySpark 3"
 categories: [Spark, Guides]
 mathjax: true
 comments: true
@@ -16,6 +16,7 @@ Let's run through these changes and look at some of the UDFs you can use and whe
 In case you are not familiar/forgotten the benefits provided by a Pandas UDF over a regular UDF, I'll recap the key points here:
 
 - **Apache Arrow:** Regular Python UDFs incur significant performance costs from data serialization between the JVM and the Python process executing the function. Pandas UDFs leverage [Apache Arrow](https://arrow.apache.org/), which is a data serialization framework. The key takeaway here is that Arrow reduces the data serialization cost dramatically.
+
 - **Vectorized operations:** Regular UDFs carry our element by element (row by row) operations across a column. However, a Pandas UDF benefits from the speed-up offered by vectorized operations when using Pandas data structures. A Pandas UDF will serialized and operate on an entire partition of a column at once before stitching the transformed partitions back together
 
 According to Databricks, a Pandas UDFs can be up to 100x(!!!!) faster than an equivalent standard Python UDF.
@@ -33,7 +34,7 @@ There are two main ways of implementing Pandas UDFs:
 
 The former is the traditional location for Pandas UDFs. However, several Pandas UDFs, such as the map and grouped map operations, have been shifted into the new Pandas Functions API.
 
-### Pandas UDFs via `pyspark.sql`:
+### Pandas UDFs via pyspark.sql:
 
 There are currently 4 supported types of Pandas UDF:
 
@@ -49,7 +50,7 @@ With the advent of PySpark 3, we now specify which type of Pandas UDF we are imp
 
 Let's take a look at the series to series UDF. We won't go into the detail for all the UDF types as they are mostly just variations of the series to series UDF.
 
-**Series to Series UDF:**
+#### Series to Series UDF:
 
 This is probably the most common type of UDF you will apply. In this scenario, our function will take in a column of type `pd.Series` and return a column of type pd.Series of the same length as the input column. Internally, PySpark will take the column, split it into batches, call the function on each batch, and concatenate the results. Let's look at a straightforward example where we create a new series based on some conditional logic.
 
@@ -63,8 +64,8 @@ from pyspark.sql.functions import pandas_udf, col
 @pandas_udf('long')
 def high_low(col: pd.Series) -> pd.Series:
 		
-		# Notice how we wrap the np.where() statement in a pd.Series().
-		# The UDF MUST return a Pandas Series.
+	# Notice how we wrap the np.where() statement in a pd.Series().
+	# The UDF MUST return a Pandas Series.
     new_col = pd.Series(np.where(col <= 70, 'Low','High')
 		
 		return new_col 
@@ -78,7 +79,7 @@ df = df.withColumn('high_low', high_low(col('grades'))
 
  A key point to note here is that the UDF ***must*** return a `Series` object. This means we cannot return a `ndarray` despite their similarities, which is why we wrapped our `np.where()` with the `pd.Series()` constructor.  
 
-## Pandas Function API
+### Pandas Function API
 
 For Spark 3.0, the developers decided to move 3  Pandas UDF types into their own section known as the Pandas Function API. The 3 types are:
 
@@ -90,7 +91,7 @@ The difference between these operations and what we saw earlier is that we can d
 
 Of these three, I'd say the grouped map operation is the most useful and easy to grasp, so let's look at this first.
 
-### Grouped Map
+#### Grouped Map
 
 Consider the following scenario:
 
@@ -116,7 +117,7 @@ from pyspark.sql.functions import pandas_udf, col
 # Lets create an example dataframe for the scenario above
 bp_df = spark.createDataFrame(
     [(1, 1, 105.0), (2, 1, 100.0), (3, 2, 128.0), (4, 2, 119.0), (5, 1, 108.0),
-		(6, 2, 122.0)],
+	(6, 2, 122.0)],
     ("id", "group", "bp"))
 
 # +---+------+-------+
@@ -137,7 +138,7 @@ def median_subtract(df: pd.DataFrame) -> pd.DataFrame:
 
 # Apply to our dataframe
 bp_df.groupBy('group').applyInPandas(median_subtract, \
-															schema="id long, group int, bp float, new_col float")
+									schema="id long, group int, bp float, new_col float")
 
 ### RESULTS:
 # +---+------+-------+--------+
@@ -160,13 +161,13 @@ Each operation from the Pandas Functions API works similarly. We don't need type
 - Map = .mapInPandas()
 - Co-grouped Map = .cogroup().applyInPandas()
 
-## Factors to consider
+### Factors to consider
 
 One thing to always keep in mind is that you should **always** use native PySpark functions wherever possible. The speed-ups offered by Pandas UDFs over regular UDFs pale in comparison to the speed of native functions, which do not have to go through the process of data serialization and transfer.
 
 In addition to this, Catalyst, the Spark optimizer, treats all UDFs as black-boxes. Therefore it can only optimize the script before and after a UDF. It cannot optimize your script as a whole. So it's beneficial to leave your UDF until the end whenever possible.
 
-## Wrap up
+### Wrap up
 
 It's not always easy to work out *when* you need a UDF or Pandas UDF. Much of this will come down to your knowledge and comfort with existing PySpark functionality. It may be tempting to use these UDFs frequently, but this will come at a performance cost due to the reasons mentioned earlier. 
 
