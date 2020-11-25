@@ -22,7 +22,8 @@ In case you are not familiar/forgotten the benefits provided by a Pandas UDF ove
 According to Databricks, a Pandas UDFs can be up to 100x(!!!!) faster than an equivalent standard Python UDF.
 
 
-<img src="/assets/images/pandas_udf.png" alt="pandas-pyudfs.png" title="Python UDFs Vs Pandas UDFs" figcaption="Python UDFs Vs Pandas UDFs">
+![pandas_udf](/assets/images/pandas_udf.png)
+*Python UDFs Vs Pandas UDFs*
 
 
 
@@ -85,11 +86,9 @@ def high_low(col: pd.Series) -> pd.Series:
 	# The UDF MUST return a Pandas Series.
     new_col = pd.Series(np.where(col <= 70, 'Low','High')
 		
-		return new_col 
+	return new_col 
 
-# We can apply this function in a variety of ways. 
-# In this scenario df is a spark df with student grades
-
+# The pandasUDF can be applied in the standard ways.
 df = df.withColumn('high_low', high_low(col('grades'))
 
 # +---+-------+---------+
@@ -127,13 +126,14 @@ Consider the following scenario:
 - You want a new column, which is the median from each group subtracted from each row's blood pressure value.
 - The final table should have the same number of rows as the initial dataframe.
 
-This is a grouped map operation. You may have also heard this kind of process being called a Split-Apply-Combine operation. The idea here is that we split the data into distinct groups, apply some function to some elements of the rows of that group, and finally combine the groups back together. What is really important to note is that we are not **aggregating** as part of the grouped map operation. The returned table will have the **same** number of rows as the initial table. The diagram below visualizes the process.
+This is a grouped map operation. You may have also heard this kind of process being called a Split-Apply-Combine operation. The idea here is that we split the data into distinct groups, apply some function to some elements of the rows of that group, and finally combine the groups back together. What is really important to note is that we are **not aggregating** as part of the grouped map operation. The returned table will have the **same** number of rows as the initial table. The diagram below visualizes the process.
 
 Compare the results table to a standard aggregation with grouping. In this kind of process, the number of rows in the final table would reduce to the number of unique groups.
 
 
 
-<img src="/assets/images/split_apply_combine.png" alt="split-apply-combine.png" title="Split-Apply-Combine Operations" figcaption="Split-Apply-Combine Operation">
+![split-apply-combine](/assets/images/split_apply_combine.png)
+*The Split-Apply-Combine operation*
 
 
 
