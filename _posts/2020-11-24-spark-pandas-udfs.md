@@ -22,7 +22,7 @@ In case you are not familiar/forgotten the benefits provided by a Pandas UDF ove
 According to Databricks, a Pandas UDFs can be up to 100x(!!!!) faster than an equivalent standard Python UDF.
 
 
-<img src="/assets/images/pandas_udf.png" alt="pandas-pyudfs.png" title="Python UDFs Vs Pandas UDFs">
+<img src="/assets/images/pandas_udf.png" alt="pandas-pyudfs.png" title="Python UDFs Vs Pandas UDFs" figcaption="Python UDFs Vs Pandas UDFs">
 
 
 
@@ -62,8 +62,22 @@ import pandas as pd
 import numpy as np 
 from pyspark.sql.functions import pandas_udf, col
 
-# We still need to apply the decorator and specify the datatype of the input col
+bp_df = spark.createDataFrame(
+    [(1, 55), (2, 78), (3, 43), (4, 85), (5, 87), (6, 92)],
+    ("id", "marks"))
 
+# +---+-------+
+# | id| group | 
+# +---+-------+
+# |  1|     55|
+# |  2|     78|
+# |  3|     43|
+# |  4|     85|
+# |  5|     87|
+# |  6|     92|
+# +---+-------+
+
+# We still need to apply the decorator and specify the datatype of the input col
 @pandas_udf('long')
 def high_low(col: pd.Series) -> pd.Series:
 		
@@ -77,6 +91,17 @@ def high_low(col: pd.Series) -> pd.Series:
 # In this scenario df is a spark df with student grades
 
 df = df.withColumn('high_low', high_low(col('grades'))
+
+# +---+-------+---------+
+# | id| group | high_low|
+# +---+-------+---------+
+# |  1|     55|      Low|
+# |  2|     78|     High|
+# |  3|     43|      Low|
+# |  4|     85|     High|
+# |  5|     87|     High|
+# |  6|     92|     High|
+# +---+-------+---------+
 
 ```
 
@@ -106,11 +131,13 @@ This is a grouped map operation. You may have also heard this kind of process be
 
 Compare the results table to a standard aggregation with grouping. In this kind of process, the number of rows in the final table would reduce to the number of unique groups.
 
+
+
+<img src="/assets/images/split_apply_combine.png" alt="split-apply-combine.png" title="Split-Apply-Combine Operations" figcaption="Split-Apply-Combine Operation">
+
+
+
 Let's take a look at the code to implement this process.
-
-<img src="/assets/images/split_apply_combine.png" alt="split-apply-combine.png" title="Split-Apply-Combine Operations">
-
-Lets have a look at some code:
 
 ```python
 import pandas as pd
