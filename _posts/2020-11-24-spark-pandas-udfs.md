@@ -21,7 +21,10 @@ In case you are not familiar/forgotten the benefits provided by a Pandas UDF ove
 
 According to Databricks, a Pandas UDFs can be up to 100x(!!!!) faster than an equivalent standard Python UDF.
 
-![pandas-pyudfs.png](/assets/images/pandas_vs_udf.png "Python UDFs Vs Pandas UDFs")
+
+<img src="/assets/images/pandas_vs_udf.png" alt="pandas-pyudfs.png" title="Python UDFs Vs Pandas UDFs" height=600 width=600>
+
+
 
 The key takeaway from the diagram above is how the Pandas UDF splits the data into partitions and will apply the transformation on the entire partition in parallel (vectorization). A standard Python UDF is applied on a *row-by-row* basis.
 
@@ -105,7 +108,7 @@ Compare the results table to a standard aggregation with grouping. In this kind 
 
 Let's take a look at the code to implement this process.
 
-![split-apply-combine.png](/assets/images/split_apply_combine.png "Split-Apply-Combine Operations")
+<img src="/assets/images/split_apply_combine.png" alt="split-apply-combine.png" title="Split-Apply-Combine Operations" height=800 width=600>
 
 Lets have a look at some code:
 
