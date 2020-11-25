@@ -22,7 +22,7 @@ In case you are not familiar/forgotten the benefits provided by a Pandas UDF ove
 According to Databricks, a Pandas UDFs can be up to 100x(!!!!) faster than an equivalent standard Python UDF.
 
 
-<img src="/assets/images/pandas_vs_udf.png" alt="pandas-pyudfs.png" title="Python UDFs Vs Pandas UDFs" height=600 width=600>
+<img src="/assets/images/pandas_udf.png" alt="pandas-pyudfs.png" title="Python UDFs Vs Pandas UDFs">
 
 
 
@@ -108,7 +108,7 @@ Compare the results table to a standard aggregation with grouping. In this kind 
 
 Let's take a look at the code to implement this process.
 
-<img src="/assets/images/split_apply_combine.png" alt="split-apply-combine.png" title="Split-Apply-Combine Operations" height=800 width=600>
+<img src="/assets/images/split_apply_combine.png" alt="split-apply-combine.png" title="Split-Apply-Combine Operations">
 
 Lets have a look at some code:
 
