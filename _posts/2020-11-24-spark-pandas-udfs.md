@@ -7,7 +7,7 @@ mathjax: true
 comments: true
 ---
 
-Pandas UDFs are a unique feature of PySpark that provide significant improvements in performance over regular UDFs. They have been present since Spark 2.3. However, with PySpark 3.0.1, significant changes have been made to how Pandas UDFs are defined and work.
+Pandas UDFs (User Defined Functions) are a unique feature of PySpark that provide significant improvements in performance over regular UDFs. They have been present since Spark 2.3. However, with PySpark 3.0.1, significant changes have been made to how Pandas UDFs are defined and work.
 
 Let's run through these changes and look at some of the UDFs you can use and when to use them. In particular, we will focus on the series-to-series Pandas UDF, as well as the grouped map operation, given these are probably the ones you will likely use most regularly.
 
