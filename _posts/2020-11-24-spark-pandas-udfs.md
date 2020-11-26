@@ -34,9 +34,9 @@ The key takeaway from the diagram above is how the Pandas UDF splits the data in
 There are two main ways of implementing Pandas UDFs:
 
 1. Pandas UDFs via the `pyspark.sql` module.
-2. The Pandas Functions API
+2. The Pandas Function API
 
-The former is the traditional location for Pandas UDFs. However, several Pandas UDFs, such as the map and grouped map operations, have been shifted into the new Pandas Functions API.
+The former is the traditional location for Pandas UDFs. However, several Pandas UDFs, such as the map and grouped map operations, have been shifted into the new Pandas Function API.
 
 ### Pandas UDFs via pyspark.sql:
 
@@ -56,7 +56,7 @@ Let's take a look at the series to series UDF. We won't go into the detail for a
 
 #### Series to Series UDF:
 
-This is probably the most common type of UDF you will apply. In this scenario, our function will take in a column of type `pd.Series` and return a column of type pd.Series of the same length as the input column. Internally, PySpark will take the column, split it into batches, call the function on each batch, and concatenate the results. Let's look at a straightforward example where we create a new series based on some conditional logic.
+This is probably the most common type of UDF you will apply. In this scenario, our function will take in a column of type `pd.Series` and return a column of type `pd.Series` of the same length as the input column. Internally, PySpark will take the column, split it into batches, call the function on each batch, and concatenate the results. Let's look at a straightforward example where we create a new series based on some conditional logic.
 
 ```python
 import pandas as pd
@@ -81,12 +81,12 @@ bp_df = spark.createDataFrame(
 # We still need to apply the decorator and specify the datatype of the input col
 @pandas_udf('long')
 def high_low(col: pd.Series) -> pd.Series:
-		
-	# Notice how we wrap the np.where() statement in a pd.Series().
-	# The UDF MUST return a Pandas Series.
+    
+    # Notice how we wrap the np.where() statement in a pd.Series().
+    # The UDF MUST return a Pandas Series.
     new_col = pd.Series(np.where(col <= 70, 'Low','High')
-		
-	return new_col 
+    
+    return new_col 
 
 # The pandasUDF can be applied in the standard ways.
 df = df.withColumn('high_low', high_low(col('grades'))
@@ -114,9 +114,9 @@ For Spark 3.0, the developers decided to move 3  Pandas UDF types into their own
 - Map operations
 - Co-grouped map operations
 
-The difference between these operations and what we saw earlier is that we can directly apply a Python function that takes and outputs pd.DataFrames onto a PySpark DataFrame. This may not make much sense right now, so let's go ahead and dive into an example to drive home the differences!
+The difference between these operations and what we saw earlier is that we can directly apply a Python function that takes and outputs a `pd.DataFrame` on a PySpark DataFrame. This may not make much sense right now, so let's go ahead and dive into an example to drive home the differences!
 
-Of these three, I'd say the grouped map operation is the most useful and easy to grasp, so let's look at this first.
+Of these three, I'd say the grouped map operation is the most useful and easy to grasp, so let's look at this.
 
 #### Grouped Map
 
@@ -131,10 +131,8 @@ This is a grouped map operation. You may have also heard this kind of process be
 Compare the results table to a standard aggregation with grouping. In this kind of process, the number of rows in the final table would reduce to the number of unique groups.
 
 
-
 ![split-apply-combine](/assets/images/split_apply_combine.png)
-*The Split-Apply-Combine operation*
-
+*The 'Split-Apply-Combine' operation*
 
 
 Let's take a look at the code to implement this process.
@@ -163,12 +161,12 @@ bp_df = spark.createDataFrame(
 
 # Lets define the function to calculate the mean of our group
 def median_subtract(df: pd.DataFrame) -> pd.DataFrame:
-		df['new_col'] = df['bp'] - df['bp'].median()
-		return df
+    df['new_col'] = df['bp'] - df['bp'].median()
+    return df
 
 # Apply to our dataframe
-bp_df.groupBy('group').applyInPandas(median_subtract, \
-									schema="id long, group int, bp float, new_col float")
+bp_df.groupBy('group') \
+    .applyInPandas(median_subtract, schema="id long, group int, bp float, new_col float")
 
 ### RESULTS:
 # +---+------+-------+--------+
